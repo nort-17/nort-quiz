@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NORT Fat Loss Bottleneck Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lime:        #C3F74A;
+            --lime-dark:   #A0D030;
+            --lime-dim:    rgba(195, 247, 74, 0.10);
+            --lime-border: rgba(195, 247, 74, 0.25);
+            --bg:          #0E0E0E;
+            --surface:     #1C1C1C;
+            --border:      #2A2A2A;
+            --text:        #FFFFFF;
+            --muted:       #888888;
+            --red:         #FF4D4D;
+            --radius-btn:  8px;
+            --radius-card: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        body {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 16px 64px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        /* Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .brand-mark {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-name {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--lime);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* Progress */
+        .progress-wrap {
+            margin-bottom: 36px;
+            display: none;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .progress-pct {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--lime);
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--lime);
+            border-radius: 2px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeUp 0.3s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Eyebrow */
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--lime);
+            margin-bottom: 12px;
+        }
+
+        /* Intro */
+        .intro-title {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 800;
+            font-size: 34px;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .intro-sub {
+            font-size: 16px;
+            color: #AAAAAA;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .intro-stats {
+            display: flex;
+            gap: 0;
+            margin-bottom: 36px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+        }
+
+        .stat-item {
+            flex: 1;
+            padding: 20px 16px;
+            text-align: center;
+            border-right: 1.5px solid var(--border);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-value {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--lime);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        /* Questions */
+        .question-text {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 21px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: 24px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-card);
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: left;
+            line-height: 1.45;
+            width: 100%;
+        }
+
+        .option:hover {
+            border-color: var(--lime-border);
+            background: var(--lime-dim);
+        }
+
+        .option.selected {
+            border-color: var(--lime);
+            background: var(--lime-dim);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            background: var(--lime);
+            color: #0E0E0E;
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 17px 24px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s ease, opacity 0.15s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--lime-dark);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Result */
+        .pillar-badge {
+            display: inline-block;
+            background: var(--lime);
+            color: #0E0E0E;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 5px 11px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .result-headline {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+        }
+
+        .result-body {
+            font-size: 15px;
+            color: #BBBBBB;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .verdict-box {
+            border-left: 3px solid var(--lime);
+            background: var(--surface);
+            padding: 16px 18px;
+            border-radius: 0 var(--radius-card) var(--radius-card) 0;
+            margin-bottom: 28px;
+            font-style: italic;
+            font-size: 14px;
+            color: #999999;
+            line-height: 1.65;
+        }
+
+        .coaching-block {
+            background: var(--surface);
+            border: 1.5px solid var(--lime-border);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .coaching-heading {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 800;
+            font-size: 17px;
+            color: var(--lime);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .coaching-body {
+            font-size: 14px;
+            color: #999999;
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .guarantee {
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .guarantee strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .retake-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .retake-link:hover {
+            color: var(--text);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 28px 0;
+        }
+
+        @media (max-width: 380px) {
+            .intro-title {
+                font-size: 28px;
+            }
+            .question-text {
+                font-size: 20px;
+            }
+            .result-headline {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Brand mark -->
+        <div class="brand">
+            <div class="brand-mark"><img src="data:image/png;base64,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" alt="Nort logo"></div>
+            <div class="brand-name">Nort</div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-wrap" id="progressWrap">
+            <div class="progress-meta">
+                <span class="progress-label" id="progressLabel">Question 1 of 5</span>
+                <span class="progress-pct" id="progressPct">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- ===== INTRO ===== -->
+        <div class="screen active" id="screen-intro">
+            <div class="eyebrow">Free Diagnostic Tool</div>
+            <h1 class="intro-title">Find Your Fat Loss Bottleneck</h1>
+            <p class="intro-sub">5 questions. 90 seconds. Find out exactly which part of the system is holding your progress back, and what to fix first.</p>
+            <div class="intro-stats">
+                <div class="stat-item">
+                    <span class="stat-value">5</span>
+                    <span class="stat-label">Questions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">90 sec</span>
+                    <span class="stat-label">To complete</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">Results</span>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="startQuiz()">Find my bottleneck →</button>
+        </div>
+
+        <!-- ===== Q1 ===== -->
+        <div class="screen" id="screen-q1">
+            <div class="eyebrow">Question 1 of 5</div>
+            <h2 class="question-text">When you've tried to lose weight before, what usually derailed you?</h2>
+            <div class="options">
+                <button class="option" onclick="pick(this, 1, 'N')">I didn't eat the right foods or track my portions</button>
+                <button class="option" onclick="pick(this, 1, 'O')">I was inconsistent with exercise or didn't move enough</button>
+                <button class="option" onclick="pick(this, 1, 'R')">Stress, poor sleep, or life got in the way</button>
+                <button class="option" onclick="pick(this, 1, 'T')">I couldn't stay consistent or hold myself accountable</button>
+            </div>
+            <button class="btn-primary" id="btn1" onclick="next(1)" disabled>Next →</button>
+        </div>
+
+        <!-- ===== Q2 ===== -->
+        <div class="screen" id="screen-q2">
+            <div class="eyebrow">Question 2 of 5</div>
+            <h2 class="question-text">On a typical weeknight, what's most true for you?</h2>
+            <div class="options">
+                <button class="option" onclick="pick(this, 2, 'N')">I eat well during the day but snack late or blow it on weekends</button>
+                <button class="option" onclick="pick(this, 2, 'O')">I sit most of the day and rarely move outside of scheduled workouts</button>
+                <button class="option" onclick="pick(this, 2, 'R')">I'm exhausted by 9pm and my sleep is all over the place</button>
+                <button class="option" onclick="pick(this, 2, 'T')">I go off-plan and don't even notice until weeks later</button>
+            </div>
+            <button class="btn-primary" id="btn2" onclick="next(2)" disabled>Next →</button>
+        </div>
+
+        <!-- ===== Q3 ===== -->
+        <div class="screen" id="screen-q3">
+            <div class="eyebrow">Question 3 of 5</div>
+            <h2 class="question-text">If a coach looked at your last 30 days, what would they flag first?</h2>
+            <div class="options">
+                <button class="option" onclick="pick(this, 3, 'N')">Calories too high, protein too low</button>
+                <button class="option" onclick="pick(this, 3, 'O')">Not enough movement — steps and exercise both below target</button>
+                <button class="option" onclick="pick(this, 3, 'R')">Recovery is broken — poor sleep, high stress, or both</button>
+                <button class="option" onclick="pick(this, 3, 'T')">No tracking system — flying completely blind on food and progress</button>
+            </div>
+            <button class="btn-primary" id="btn3" onclick="next(3)" disabled>Next →</button>
+        </div>
+
+        <!-- ===== Q4 ===== -->
+        <div class="screen" id="screen-q4">
+            <div class="eyebrow">Question 4 of 5</div>
+            <h2 class="question-text">What would losing 20 pounds actually change for you?</h2>
+            <div class="options">
+                <button class="option" onclick="pick(this, 4, 'ENG')">How I feel in the morning and throughout the day</button>
+                <button class="option" onclick="pick(this, 4, 'ENG')">My confidence at work and in social situations</button>
+                <button class="option" onclick="pick(this, 4, 'ENG')">My energy levels and daily performance</button>
+                <button class="option" onclick="pick(this, 4, 'ENG')">My relationship with food and my own body</button>
+            </div>
+            <button class="btn-primary" id="btn4" onclick="next(4)" disabled>Next →</button>
+        </div>
+
+        <!-- ===== Q5 ===== -->
+        <div class="screen" id="screen-q5">
+            <div class="eyebrow">Question 5 of 5</div>
+            <h2 class="question-text">How long have you been trying to lose the same weight?</h2>
+            <div class="options">
+                <button class="option" onclick="pick(this, 5, 'T0')">Less than 3 months</button>
+                <button class="option" onclick="pick(this, 5, 'T1')">3 to 12 months</button>
+                <button class="option" onclick="pick(this, 5, 'T2')">1 to 3 years</button>
+                <button class="option" onclick="pick(this, 5, 'T3')">More than 3 years</button>
+            </div>
+            <button class="btn-primary" id="btn5" onclick="showResult()" disabled>See my result →</button>
+        </div>
+
+        <!-- ===== RESULT: N — Nutrition ===== -->
+        <div class="screen" id="result-N">
+            <div class="eyebrow">Your Fat Loss Bottleneck</div>
+            <div class="pillar-badge">Nutrition</div>
+            <h2 class="result-headline">You're not lazy. Your numbers are just wrong.</h2>
+            <p class="result-body">The data is clear. Most people eating "clean" are still in a calorie surplus without knowing it. The fix isn't another diet. It's knowing your exact daily calorie target and hitting it 80% of the time. One number. That's the whole game.</p>
+            <div class="verdict-box">"Willpower isn't the problem here. The system is. Get the number right and the weight comes off. Every. Single. Time."</div>
+            <div class="divider"></div>
+            <div class="coaching-block">
+                <div class="coaching-heading">Want Allan to run your numbers personally?</div>
+                <div class="coaching-body">In a free 20-minute call, Allan will calculate your exact calorie target, protein goal, and daily step count — then tell you specifically what to fix first. No pitch. Just your numbers.</div>
+                <a href="YOUR_BOOKING_LINK" target="_blank" style="text-decoration:none;">
+                    <button class="btn-primary">Book a free call with Allan →</button>
+                </a>
+            </div>
+            <p class="guarantee">Lose 20 lbs in 3 months. <strong>Or you don't pay.</strong></p>
+            <span class="retake-link" onclick="resetQuiz()">Retake the quiz</span>
+        </div>
+
+        <!-- ===== RESULT: O — Output ===== -->
+        <div class="screen" id="result-O">
+            <div class="eyebrow">Your Fat Loss Bottleneck</div>
+            <div class="pillar-badge">Output</div>
+            <h2 class="result-headline">You're working out. But your body isn't moving enough.</h2>
+            <p class="result-body">The gym accounts for roughly 5% of your daily calorie burn. Walking accounts for 15%. Most people hammer the 5% and wonder why the scale won't move. The fix isn't more gym sessions. It's understanding where your energy actually goes — and fixing the 23 hours outside the gym.</p>
+            <div class="verdict-box">"The gym isn't the problem. The rest of the day is. Fix your daily output and fat loss becomes predictable."</div>
+            <div class="divider"></div>
+            <div class="coaching-block">
+                <div class="coaching-heading">Want Allan to find your exact output target?</div>
+                <div class="coaching-body">In a free 20-minute call, Allan will calculate your actual daily calorie burn, your step target, and the minimum training dose to hit your goal. Specific numbers, not generic advice.</div>
+                <a href="YOUR_BOOKING_LINK" target="_blank" style="text-decoration:none;">
+                    <button class="btn-primary">Book a free call with Allan →</button>
+                </a>
+            </div>
+            <p class="guarantee">Lose 20 lbs in 3 months. <strong>Or you don't pay.</strong></p>
+            <span class="retake-link" onclick="resetQuiz()">Retake the quiz</span>
+        </div>
+
+        <!-- ===== RESULT: R — Recovery ===== -->
+        <div class="screen" id="result-R">
+            <div class="eyebrow">Your Fat Loss Bottleneck</div>
+            <div class="pillar-badge">Recovery</div>
+            <h2 class="result-headline">You're burning muscle, not fat. Here's why.</h2>
+            <p class="result-body">Poor sleep doesn't just make you tired. It shifts your body into muscle-burning mode and spikes the hormones that drive fat storage. Every hour under 7 hours of quality sleep costs you measurable progress. The good news: this is a protocol problem, not a willpower problem. It's fixable in 2 weeks.</p>
+            <div class="verdict-box">"Most people push harder on their diet when progress stalls. The real fix is usually in the 8 hours before they wake up."</div>
+            <div class="divider"></div>
+            <div class="coaching-block">
+                <div class="coaching-heading">Want Allan to audit your recovery setup?</div>
+                <div class="coaching-body">In a free 20-minute call, Allan will look at your sleep, stress, and recovery patterns and give you the 2-3 specific changes that will unlock your fat loss. No guesswork. Just the fixes that actually move the needle.</div>
+                <a href="YOUR_BOOKING_LINK" target="_blank" style="text-decoration:none;">
+                    <button class="btn-primary">Book a free call with Allan →</button>
+                </a>
+            </div>
+            <p class="guarantee">Lose 20 lbs in 3 months. <strong>Or you don't pay.</strong></p>
+            <span class="retake-link" onclick="resetQuiz()">Retake the quiz</span>
+        </div>
+
+        <!-- ===== RESULT: T — Tracking ===== -->
+        <div class="screen" id="result-T">
+            <div class="eyebrow">Your Fat Loss Bottleneck</div>
+            <div class="pillar-badge">Tracking</div>
+            <h2 class="result-headline">You're not failing. You're flying blind.</h2>
+            <p class="result-body">The research is unambiguous. People who track consistently lose 2-3x more weight than people who don't. Not because tracking is magic. Because you can't fix what you can't see. Right now you're making decisions without data. One system changes everything — and it takes 3 minutes a day to run.</p>
+            <div class="verdict-box">"You've been trying to navigate without a map. The system isn't hard to build. It just needs to exist."</div>
+            <div class="divider"></div>
+            <div class="coaching-block">
+                <div class="coaching-heading">Want a 90-day tracking system built for you?</div>
+                <div class="coaching-body">In a free 20-minute call, Allan will set up your tracking system, establish your baselines, and give you the exact daily check-in process his clients use to lose 20 lbs in 90 days. You leave with a system, not just advice.</div>
+                <a href="YOUR_BOOKING_LINK" target="_blank" style="text-decoration:none;">
+                    <button class="btn-primary">Book a free call with Allan →</button>
+                </a>
+            </div>
+            <p class="guarantee">Lose 20 lbs in 3 months. <strong>Or you don't pay.</strong></p>
+            <span class="retake-link" onclick="resetQuiz()">Retake the quiz</span>
+        </div>
+
+    </div>
+
+    <script>
+        // ── State ──────────────────────────────────────────────
+        let scores  = { N: 0, O: 0, R: 0, T: 0 };
+        let answers = {};
+
+        // ── Helpers ────────────────────────────────────────────
+        function showOnly(id) {
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+            });
+            const el = document.getElementById(id);
+            if (el) el.classList.add('active');
+        }
+
+        function setProgress(current, total) {
+            const pct = Math.round(((current - 1) / total) * 100);
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressLabel').textContent = 'Question ' + current + ' of ' + total;
+            document.getElementById('progressPct').textContent = pct + '%';
+        }
+
+        // ── Quiz flow ─────────────────────────────────────────
+        function startQuiz() {
+            document.getElementById('progressWrap').style.display = 'block';
+            setProgress(1, 5);
+            showOnly('screen-q1');
+        }
+
+        function pick(el, qNum, pillar) {
+            // Clear prior selection on this question
+            const qEl = document.getElementById('screen-q' + qNum);
+            if (qEl) {
+                qEl.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            }
+            el.classList.add('selected');
+            answers[qNum] = pillar;
+
+            // Enable next button
+            const btn = document.getElementById('btn' + qNum);
+            if (btn) btn.removeAttribute('disabled');
+        }
+
+        function next(fromQ) {
+            // Score Q1, Q2, Q3 (Q4 = engagement only, Q5 handled in showResult)
+            if (fromQ <= 3) {
+                const p = answers[fromQ];
+                if (p && p !== 'ENG') {
+                    scores[p]++;
+                }
+            }
+
+            const nextQ = fromQ + 1;
+            setProgress(nextQ, 5);
+            showOnly('screen-q' + nextQ);
+        }
+
+        function showResult() {
+            // Apply Q5 modifier
+            const q5 = answers[5];
+            if (q5 === 'T1') scores.T += 1;
+            if (q5 === 'T2') scores.T += 1;
+            if (q5 === 'T3') scores.T += 2;
+
+            // Find winner
+            // Tie-break priority: T > N > O > R (T is the most common root cause)
+            const priority = ['T', 'N', 'O', 'R'];
+            let winner = 'T';
+            let max = -1;
+
+            for (const p of priority) {
+                if (scores[p] > max) {
+                    max = scores[p];
+                    winner = p;
+                }
+            }
+
+            // Hide progress bar on result
+            document.getElementById('progressWrap').style.display = 'none';
+            showOnly('result-' + winner);
+        }
+
+        function resetQuiz() {
+            scores  = { N: 0, O: 0, R: 0, T: 0 };
+            answers = {};
+            // Clear all selected states
+            document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            // Disable all next buttons
+            ['btn1','btn2','btn3','btn4','btn5'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('disabled', true);
+            });
+            document.getElementById('progressWrap').style.display = 'none';
+            showOnly('screen-intro');
+        }
+    </script>
+</body>
+</html>
